@@ -30,5 +30,7 @@ const kQuizTextbody = TextStyle(
 );
 const kGradientcolor= [Colors.blueAccent, Colors.lightBlueAccent];
 const kTextButtonStyleTrueFalse=TextStyle(
-    fontSize: 25, );
+    fontSize: 35,
+  fontFamily: "Press Start 2P",
+);
 

@@ -39,10 +39,10 @@ class QuizBrain {
     var randomlychosen=falsemaker[_random.nextInt(falsemaker.length)];
 
     var truefalsedecision=_random.nextInt(2);
-    _quizanswer="True";
+    _quizanswer="TRUE";
     if(truefalsedecision==0){
       realResult=realResult+randomlychosen;
-        _quizanswer="False";
+        _quizanswer="FALSE";
       if (realResult<0) {
         realResult=realResult=_random.nextInt(2)+4;
       }
