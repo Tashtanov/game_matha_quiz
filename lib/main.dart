@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom, SystemUiOverlay.top]);
     return MaterialApp(
       debugShowMaterialGrid: false,
-      title: 'Snake Xenzia',
+      title: 'Snake Xenzia ',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
 

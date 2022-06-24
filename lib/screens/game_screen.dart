@@ -6,13 +6,14 @@ import 'package:game_app/common/constants.dart';
 import 'package:game_app/quiz_game.dart';
 import 'package:outline_gradient_button/outline_gradient_button.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 QuizBrain _quizBrain = QuizBrain();
 int _score = 0;
 int _highScore = 0;
 double _value = 0;
 int _falseCounter = 0;
-int _totalQuizCount=0;
+int _totalQuizCount = 0;
 
 class GameScreen extends StatefulWidget {
   static final id = "game_screen";
@@ -32,13 +33,15 @@ class _GameScreenState extends State<GameScreen> {
     startGame();
   }
 
-  void startGame() {
+  void startGame() async {
     _quizBrain.makeQuiz();
     startTimer();
     _value = 1;
     _score = 0;
     _falseCounter = 0;
-    _totalQuizCount=1;
+    _totalQuizCount = 1;
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    _highScore=sharedPreferences.getInt("highscore") ?? 0;
   }
 
   void startTimer() {
@@ -51,9 +54,6 @@ class _GameScreenState extends State<GameScreen> {
         });
       } else {
         setState(() {
-          if (_highScore < _score) {
-            _highScore = _score;
-          }
           _timer.cancel();
           _totalTimer = 0;
           showMyDialog();
@@ -121,6 +121,7 @@ class _GameScreenState extends State<GameScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var mq=MediaQuery.of(context);
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -130,29 +131,66 @@ class _GameScreenState extends State<GameScreen> {
               gradient: LinearGradient(
             colors: kGradientcolor,
           )),
+          child: getTrueMode(mq),
+        ),
+      ),
+    );
+  }
+  Widget getTrueMode(MediaQueryData mqd){
+    if (mqd.size.width<mqd.size.height) return getPortrateMode();
+
+
+    else return LandsScapeModel();
+  }
+
+  Column getPortrateMode() {
+    return Column(
+          children: [
+            ScoreIndicators(),
+            GameBody(),
+            buildCircularIndicator(totalTimer: _totalTimer),
+            Expanded(
+              child: Row(
+                children: [
+                  ReUsableOutLinedButton(
+                    textName: "FALSE",
+                    colorName: Colors.redAccent,
+                  ),
+                  ReUsableOutLinedButton(
+                    textName: "TRUE",
+                    colorName: Colors.lightGreenAccent,
+                  ),
+                ],
+              ),
+            )
+          ],
+        );
+  }
+  Row LandsScapeModel (){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        ReUsableOutLinedButton(
+          textName: "FALSE",
+          colorName: Colors.redAccent,
+        ),
+        Expanded(
           child: Column(
             children: [
+
               ScoreIndicators(),
               GameBody(),
               buildCircularIndicator(totalTimer: _totalTimer),
-              Expanded(
-                child: Row(
-                  children: [
-                    ReUsableOutLinedButton(
-                      textName: "FALSE",
-                      colorName: Colors.redAccent,
-                    ),
-                    ReUsableOutLinedButton(
-                      textName: "TRUE",
-                      colorName: Colors.lightGreenAccent,
-                    ),
-                  ],
-                ),
-              )
             ],
           ),
         ),
-      ),
+        ReUsableOutLinedButton(
+          textName: "TRUE",
+          colorName: Colors.lightGreenAccent,
+        ),
+
+
+      ],
     );
   }
 }
@@ -183,6 +221,7 @@ class buildCircularIndicator extends StatelessWidget {
         style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
       ),
     );
+
   }
 }
 
@@ -195,10 +234,22 @@ class ReUsableOutLinedButton extends StatelessWidget {
     required this.colorName,
   });
 
-  void checkAnswer() {
+  // void playSound ( String soundName){
+  //   AudioPlayer player =AudioPlayer();
+  //   player.
+  //
+  // }
+
+  void checkAnswer() async {
     if (textName == _quizBrain.quizanswer) {
       _score++;
       _value >= 0.89 ? _value = 1 : _value += 0.1;
+      if (_highScore < _score) {
+        _highScore = _score;
+        SharedPreferences sharedPreferences =
+            await SharedPreferences.getInstance();
+        sharedPreferences.setInt("highscore", _highScore);
+      }
     } else {
       _falseCounter++;
       _value < 0.1 * _falseCounter ? _value = 0 : _value -= 0.1 * _falseCounter;
@@ -226,7 +277,6 @@ class ReUsableOutLinedButton extends StatelessWidget {
               _totalQuizCount++;
               checkAnswer();
               _quizBrain.makeQuiz();
-
             },
             gradient: LinearGradient(colors: kGradientcolor)),
       ),

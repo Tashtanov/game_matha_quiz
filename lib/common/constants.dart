@@ -19,7 +19,7 @@ const kTapToStartTextStyle = TextStyle(
   color: Colors.black,
 );
 const kScoreTextIndicator = TextStyle(
-    fontFamily: "Press Start 2P", fontSize: 20, color: Colors.yellow);
+    fontFamily: "Press Start 2P", fontSize: 15, color: Colors.yellow);
 const kScoreIndicator = TextStyle(
     fontFamily: "Chakra Petch", fontSize: 25, fontWeight: FontWeight.bold);
 const kQuizTextbody = TextStyle(
