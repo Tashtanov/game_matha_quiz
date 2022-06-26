@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,6 +15,18 @@ int _highScore = 0;
 double _value = 0;
 int _falseCounter = 0;
 int _totalQuizCount = 0;
+List imageList=[
+  "assets/images/kto.jfif",
+  "assets/images/mem2.jpg",
+  "assets/images/mem3.jpg",
+  "assets/images/mem4.jpg",
+  "assets/images/mem5.jpg",
+  "assets/images/mem6.jpg",
+
+];
+Random random=Random();
+var img=imageList[random.nextInt(imageList.length)];
+
 
 class GameScreen extends StatefulWidget {
   static final id = "game_screen";
@@ -36,30 +49,76 @@ class _GameScreenState extends State<GameScreen> {
   void startGame() async {
     _quizBrain.makeQuiz();
     startTimer();
+
     _value = 1;
     _score = 0;
+
     _falseCounter = 0;
     _totalQuizCount = 1;
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    _highScore=sharedPreferences.getInt("highscore") ?? 0;
+    _highScore = sharedPreferences.getInt("highscore") ?? 0;
+  }
+  void pauseTimer(){
+    _timer.cancel();
   }
 
   void startTimer() {
     const speed = Duration(milliseconds: 100);
     _timer = Timer.periodic(speed, (timer) {
+      if ((_score!=0)&&(_score%5==0)) {
+        reward();
+        pauseTimer();
+        _score++;
+
+      }
       if (_value > 0) {
         setState(() {
           _value > 0.01 ? _value -= 0.01 : _value = 0;
           _totalTimer = (_value * 10 + 1).toInt();
+          // if (_score == 3) {
+          //   reward();
+          // }
         });
       } else {
         setState(() {
           _timer.cancel();
           _totalTimer = 0;
+          // reward();
           showMyDialog();
         });
       }
     });
+  }
+
+
+  Future<void> reward() {
+    return showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            backgroundColor: Colors.lightGreen,
+            title: Container(
+              height: 200,
+              width: 300,
+
+              child:     Image.asset(img=imageList[random.nextInt(imageList.length)]),
+            ),
+            actions: [
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    startTimer();
+                  },
+                  child: Text(
+                    "Go on",
+                    style: TextStyle(fontSize: 25),
+                  ))
+            ],
+          );
+        });
   }
 
   Future<void> showMyDialog() {
@@ -121,7 +180,7 @@ class _GameScreenState extends State<GameScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var mq=MediaQuery.of(context);
+    var mq = MediaQuery.of(context);
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -136,37 +195,39 @@ class _GameScreenState extends State<GameScreen> {
       ),
     );
   }
-  Widget getTrueMode(MediaQueryData mqd){
-    if (mqd.size.width<mqd.size.height) return getPortrateMode();
 
-
-    else return LandsScapeModel();
+  Widget getTrueMode(MediaQueryData mqd) {
+    if (mqd.size.width < mqd.size.height)
+      return getPortrateMode();
+    else
+      return LandsScapeModel();
   }
 
   Column getPortrateMode() {
     return Column(
-          children: [
-            ScoreIndicators(),
-            GameBody(),
-            buildCircularIndicator(totalTimer: _totalTimer),
-            Expanded(
-              child: Row(
-                children: [
-                  ReUsableOutLinedButton(
-                    textName: "FALSE",
-                    colorName: Colors.redAccent,
-                  ),
-                  ReUsableOutLinedButton(
-                    textName: "TRUE",
-                    colorName: Colors.lightGreenAccent,
-                  ),
-                ],
+      children: [
+        ScoreIndicators(),
+        GameBody(),
+        buildCircularIndicator(totalTimer: _totalTimer),
+        Expanded(
+          child: Row(
+            children: [
+              ReUsableOutLinedButton(
+                textName: "FALSE",
+                colorName: Colors.redAccent,
               ),
-            )
-          ],
-        );
+              ReUsableOutLinedButton(
+                textName: "TRUE",
+                colorName: Colors.lightGreenAccent,
+              ),
+            ],
+          ),
+        )
+      ],
+    );
   }
-  Row LandsScapeModel (){
+
+  Row LandsScapeModel() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
@@ -177,7 +238,6 @@ class _GameScreenState extends State<GameScreen> {
         Expanded(
           child: Column(
             children: [
-
               ScoreIndicators(),
               GameBody(),
               buildCircularIndicator(totalTimer: _totalTimer),
@@ -188,8 +248,6 @@ class _GameScreenState extends State<GameScreen> {
           textName: "TRUE",
           colorName: Colors.lightGreenAccent,
         ),
-
-
       ],
     );
   }
@@ -221,7 +279,6 @@ class buildCircularIndicator extends StatelessWidget {
         style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
       ),
     );
-
   }
 }
 

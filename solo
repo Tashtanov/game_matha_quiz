@@ -1,0 +1,35 @@
+[33mcommit cbda52fa857de1c2e34c6bdff5fb42538842de2f[m[33m ([m[1;36mHEAD -> [m[1;32msolo[m[33m, [m[1;31morigin/solo[m[33m)[m
+Author: Tashtanov <tashtanov333@gmail.com>
+Date:   Sat Jun 25 03:50:36 2022 +0600
+
+    finished project
+
+[33mcommit b13ca95109b32343c7cdf7728b13fa0ec9aba5bc[m
+Author: Tashtanov <tashtanov333@gmail.com>
+Date:   Thu Jun 23 04:27:20 2022 +0600
+
+    functional of buttons and showdialog
+
+[33mcommit e4649a78cd379752199586b3d2dadfd2f5309865[m
+Author: Tashtanov <tashtanov333@gmail.com>
+Date:   Sun Jun 19 03:44:34 2022 +0600
+
+    true false buttons
+
+[33mcommit b7a103040371ce3cf9b5755f36d642e2be37b12f[m
+Author: Tashtanov <tashtanov333@gmail.com>
+Date:   Sat Jun 18 19:12:38 2022 +0600
+
+    Brain of the Game
+
+[33mcommit 116645783f05e5d9e6db6d4758cebb0e0c618fc8[m
+Author: Tashtanov <tashtanov333@gmail.com>
+Date:   Thu Jun 16 04:00:59 2022 +0600
+
+    added first page WelcomeScreen and did it on touchable
+
+[33mcommit 83ca70b484dfd89f4de0c21773b5de73d3c6067c[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m
+Author: Tashtanov <tashtanov333@gmail.com>
+Date:   Wed Jun 15 09:21:24 2022 +0600
+
+    git initialization
