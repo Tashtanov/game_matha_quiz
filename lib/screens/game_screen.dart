@@ -15,6 +15,7 @@ int _highScore = 0;
 double _value = 0;
 int _falseCounter = 0;
 int _totalQuizCount = 0;
+int total=0;
 List imageList=[
   "assets/images/kto.jfif",
   "assets/images/mem2.jpg",
@@ -65,10 +66,13 @@ class _GameScreenState extends State<GameScreen> {
   void startTimer() {
     const speed = Duration(milliseconds: 100);
     _timer = Timer.periodic(speed, (timer) {
-      if ((_score!=0)&&(_score%5==0)) {
-        reward();
-        pauseTimer();
-        _score++;
+      if ((total!=0)&&(total%5==0)) {
+        setState(() {
+          reward();
+          pauseTimer();
+          total= 0;
+        });
+
 
       }
       if (_value > 0) {
@@ -300,6 +304,7 @@ class ReUsableOutLinedButton extends StatelessWidget {
   void checkAnswer() async {
     if (textName == _quizBrain.quizanswer) {
       _score++;
+      total++;
       _value >= 0.89 ? _value = 1 : _value += 0.1;
       if (_highScore < _score) {
         _highScore = _score;
